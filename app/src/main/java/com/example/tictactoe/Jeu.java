@@ -1,3 +1,5 @@
+package com.example.tictactoe;
+
 import java.util.Random;
 import java.util.Vector;
 
@@ -17,41 +19,6 @@ import java.util.Vector;
 */
 
 public class Jeu implements TicTacToe {	
-	/* pour faciliter l'énumération des combinaisons et minimiser le nombre de lignes du code,
-	   je vais utiliser dans le code la grille des index suivante :
-	   0 1 2
-	   7 8 3
-	   6 5 4
-	 */
-	//convertisseur des index entre l'interface graphique et le code
-	private static class GrilleConvert {
-		//tableau de conversion
-		private static final int[] table = { 0, 1, 2, 7, 8, 3, 6, 5, 4 };
-		
-		/**
-		* Méthode static « aIntGr » de type return <int>
-		* Description: convertit l'index utilisé dans le code au celui utilisé avec l'interface graphique
-		* @param index - index utilisé dans le code
-		* @return <int> - index utilisé avec l'interface graphique
-		*/
-		public static int aIntGr(int index) {
-			for (int i = 0; i < 9; i++)
-				if (table[i] == index)
-					return i;
-			return -1;
-		}
-		
-		/**
-		* Méthode static « deIntGr » de type return <int>
-		* Description: convertit l'index utilisé avec l'interface graphique au celui utilisé dans le code
-		* @param index - index utilisé avec l'interface graphique
-		* @return <int> - index utilisé dans le code
-		*/
-		public static int deIntGr(int index) {
-			return table[index];
-		}
-	}
-	
 	//tableau des coups : 0 - libre; -1 - X; 1 - O
 	private int[] grille = new int[9];
 	//vecteur des états des 8 combinaisons gagnantes
@@ -73,7 +40,7 @@ public class Jeu implements TicTacToe {
 	public void initialise() {
 		for (int i = 0; i < grille.length; i++)
 			grille[i] = 0;
-		nCoup = 1;
+		nCoup = 0;
 		combGagnantes.removeAllElements();
 		for (int i = 0; i < 8; i++)
 			combGagnantes.add(0);
@@ -85,7 +52,8 @@ public class Jeu implements TicTacToe {
 	* @param cellule - position de « X » selon la grille de l'interface
 	*/
 	public void setX(int cellule) {
-		dernCoup = GrilleConvert.deIntGr(cellule);
+		nCoup++;
+		dernCoup = cellule;
 		grille[dernCoup] = -1;
 		verifierComb();
 	}
@@ -126,9 +94,8 @@ public class Jeu implements TicTacToe {
 							posO = cellLibre(0);
 		}
 		grille[posO] = 1;
-		nCoup++;
 		verifierComb();
-		return GrilleConvert.aIntGr(posO);
+		return posO;
 	}
 
 	/**
@@ -143,7 +110,7 @@ public class Jeu implements TicTacToe {
 		int posGagn = combGagnantes.indexOf(val);
 		int[] p = cellulesComb(posGagn);
 		for (int i = 0; i < 3; i++)
-			pos[i] = GrilleConvert.aIntGr(p[i]);
+			pos[i] = p[i];
 		return (posGagn == -1) ? false : true;
 	}
 	
@@ -256,9 +223,18 @@ public class Jeu implements TicTacToe {
 	/**
 	* Méthode « testDebug » de type void
 	* Description: remplit la grille avant commencer le jeu 
-	* @param indicesCoups - tableau des positions des premiers coups (« X » - éléments paires, « O » - éléments impaires)
+	* @param coups - tableau des positions des premiers coups (« X » - éléments paires, « O » - éléments impaires)
 	*/
-	public void testDebug(int[] indicesCoups) {
-		
+	public void testDebug(int[] coups) {
+		for (int i = 0; i < coups.length && coups[i] != -1; i++) {
+			if (i % 2 == 1)
+				grille[coups[i]] = 1;
+			else {
+				nCoup++;
+				dernCoup = coups[i];
+				grille[coups[i]] = -1;
+			}
+		}
+		verifierComb();
 	}
 }

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Tic-tac-toe - Yakiv Tulinkov</string>
+    <string name="btn_newGame">Nouvelle partie</string>
+    <string name="gameRes_draw">Partie nulle !</string>
+    <string name="gameRes_OWins">O gagne !</string>
+    <string name="gameRes_XWins">X gagne !</string>
+</resources>
